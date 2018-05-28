@@ -7,8 +7,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tikal.mensajeria.dao.SessionDao;
-import com.tikal.mensajeria.login.SessionEntity;
-import com.tikal.mensajeria.login.Usuario;
+import com.tikal.mensajeria.modelo.login.SessionEntity;
+import com.tikal.mensajeria.modelo.login.Usuario;
 
 @Service("sessionDao")
 

@@ -1,6 +1,6 @@
 package com.tikal.mensajeria.dao;
 
-import com.tikal.mensajeria.login.SessionEntity;
+import com.tikal.mensajeria.modelo.login.SessionEntity;
 
 public interface SessionDao {
 

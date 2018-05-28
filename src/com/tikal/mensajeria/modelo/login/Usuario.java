@@ -1,4 +1,4 @@
-package com.tikal.mensajeria.login;
+package com.tikal.mensajeria.modelo.login;
 
 import java.util.List;
 
@@ -9,9 +9,14 @@ import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
+
 @Entity
 public class Usuario implements UserDetails{
 	
+	/**
+	 * 
+	 */
+
 	@Id Long id;
 	@Index String usuario;
 	private String password;

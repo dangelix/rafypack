@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.tikal.mensajeria.dao.PerfilDAO;
 import com.tikal.mensajeria.dao.SessionDao;
 import com.tikal.mensajeria.dao.UsuarioDao;
-import com.tikal.mensajeria.login.Perfil;
+import com.tikal.mensajeria.modelo.login.Perfil;
 import com.tikal.mensajeria.util.AsignadorDeCharset;
 import com.tikal.mensajeria.util.JsonConvertidor;
 

@@ -20,9 +20,9 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.tikal.mensajeria.dao.PerfilDAO;
 import com.tikal.mensajeria.dao.SessionDao;
 import com.tikal.mensajeria.dao.UsuarioDao;
-import com.tikal.mensajeria.login.Perfil;
-import com.tikal.mensajeria.login.Sucursal;
-import com.tikal.mensajeria.login.Usuario;
+import com.tikal.mensajeria.modelo.login.Perfil;
+import com.tikal.mensajeria.modelo.login.Sucursal;
+import com.tikal.mensajeria.modelo.login.Usuario;
 import com.tikal.mensajeria.util.AsignadorDeCharset;
 import com.tikal.mensajeria.util.JsonConvertidor;
 import com.tikal.mensajeria.util.Util;
@@ -203,7 +203,7 @@ public class UsuarioController {
 		public void crearUsuarioUnico(HttpServletRequest request, HttpServletResponse response){
 			System.out.println("si entra a superadministrador");
 				Usuario usuario = new Usuario();
-				System.out.println("si entra a superadministrador");
+				
 				//usuario.setEmail("root@root.com");
 				usuario.setPassword(otroMetodo("root"));  
 				usuario.setPerfil("SuperAdministrador");//root;admin1
@@ -213,9 +213,9 @@ public class UsuarioController {
 				usuario.setaPaterno("Administrador");
 				usuario.setaMaterno("Administrador");
 				//usuario.setIdPuesto(Long.parseLong("1111111111"));
-				
+				System.out.println("si entra a superadministrador");
 				usuarioDao.crearUsuario(usuario);
-				
+				System.out.println("ssssssssssssssssssssr");
 				//PuestoEntity puesto = new PuestoEntity();
 				
 				Sucursal sucursal = new Sucursal();

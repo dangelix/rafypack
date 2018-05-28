@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tikal.mensajeria.dao.SucursalDao;
-import com.tikal.mensajeria.login.Sucursal;
+import com.tikal.mensajeria.modelo.login.Sucursal;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 

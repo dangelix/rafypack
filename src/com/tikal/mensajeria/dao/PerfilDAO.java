@@ -2,7 +2,7 @@ package com.tikal.mensajeria.dao;
 
 import java.util.List;
 
-import com.tikal.mensajeria.login.Perfil;
+import com.tikal.mensajeria.modelo.login.Perfil;
 
 
 

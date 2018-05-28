@@ -1,6 +1,6 @@
 package com.tikal.mensajeria.dao;
 
-import com.tikal.mensajeria.login.Sucursal;
+import com.tikal.mensajeria.modelo.login.Sucursal;
 
 public interface SucursalDao {
 	

@@ -1,4 +1,4 @@
-package com.tikal.mensajeria.login;
+package com.tikal.mensajeria.modelo.login;
 
 import org.springframework.security.core.GrantedAuthority;
 

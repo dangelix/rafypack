@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.tikal.mensajeria.dao.UsuarioDao;
-import com.tikal.mensajeria.login.Usuario;
+import com.tikal.mensajeria.modelo.login.Usuario;
 
 
 //@Repository
@@ -47,9 +47,12 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		//if(this.consultarPorEmail(usuario.getEmail()).getEmail()!=null){
 			//return false;
 		//}
+		System.out.println("entra a crear usuario"+usuario.getUsername());
 		if (this.consultarUsuario(usuario.getUsername())==null) {
+			System.out.println("xxxxxxxxx");
 			ofy().save().entity(usuario).now();
 		} else {
+			System.out.println("yyyyyyyyyyyyyy");
 			return false;
 		}
 
@@ -64,6 +67,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public Usuario consultarUsuario(String usuario) {
+		System.out.println("consultar usuario");
 		List<Usuario> usu = ofy().load().type(Usuario.class).filter("usuario", usuario).list();
 		System.out.println("lista de usuarios con ese username:"+usu);
 		if (usu.size() == 0) {

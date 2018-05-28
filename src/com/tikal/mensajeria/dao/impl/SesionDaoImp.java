@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import com.tikal.mensajeria.dao.SesionDao;
-import com.tikal.mensajeria.login.Usuario;
+import com.tikal.mensajeria.modelo.login.Usuario;
 
 
 

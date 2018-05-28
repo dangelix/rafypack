@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.tikal.mensajeria.dao.PerfilDAO;
-import com.tikal.mensajeria.login.Perfil;
+import com.tikal.mensajeria.modelo.login.Perfil;
 
 @Service("perfilDAO")
 public class PerfilDAOImp implements PerfilDAO{
