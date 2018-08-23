@@ -35,7 +35,7 @@ public interface FacturaVTTService {
 	 * <p>Timbra un CFDI 3.3 previamente generado</p>
 	 * 
 	 * @param uuid el uuid del comprobante previamente generado
-	 * @param email la direcci&oacute;n email a la cual se enviará el archivo XML y PDF del CFDI.
+	 * @param email la direcci&oacute;n email a la cual se enviarï¿½ el archivo XML y PDF del CFDI.
 	 * @param sesion la sesi&oacute;n que se utiliza para obtener el nombre del usuario que realizo el evento
 	 * @return un texto con el resultado de la operaci&oacute;n de Timbrado del
 	 * CFDI 3.3
@@ -43,7 +43,7 @@ public interface FacturaVTTService {
 	String timbrarCFDIGenerado(String uuid, String email, HttpSession sesion);
 	
 	/**
-	 * <p>Timbra un CFDI 3.3 a partir de un objeto {@code ComprobanteVO} con la información de un CFDI 3.3, comentarios
+	 * <p>Timbra un CFDI 3.3 a partir de un objeto {@code ComprobanteVO} con la informaciï¿½n de un CFDI 3.3, comentarios
 	 * para la representaci&oacute;n impresa y, una direcci&oacute;n email para enviar 
 	 * los archivos XML y PDF del CFDI.</p>
 	 * 

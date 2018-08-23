@@ -219,7 +219,6 @@ public class FacturaVTTController {
 	
 	@RequestMapping(value = "/obtenerPDF/{uuid}", method = RequestMethod.GET, produces = "application/pdf")
 	public void obtenerPDF(HttpServletRequest req, HttpServletResponse res, @PathVariable String uuid) {
-		System.out.println("hola");
 		try {
 			if (ServicioSesion.verificarPermiso(req, usuarioDAO, perfilDAO, 11)) {
 				FacturaVTT factura = facturaVTTService.consultar(uuid);

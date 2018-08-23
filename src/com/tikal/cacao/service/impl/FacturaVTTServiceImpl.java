@@ -141,7 +141,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 			String mensajeRespuesta = (String) respuesta.get(2);
 
 			if (codigoRespuesta == 0) {
-				String evento = "Se registró al emisor del rfc: " + rfc;
+				String evento = "Se registrï¿½ al emisor del rfc: " + rfc;
 				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 				bitacoradao.addReg(registroBitacora);
 				return "Los archivos del emisor fueron registrados. ".concat(mensajeRespuesta);
@@ -169,11 +169,11 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		facturaVTTDAO.guardar(factura);
 		this.crearReporteRenglon(factura, c.getMetodoPago(), c.getTipoDeComprobante().getValor());
 
-		String evento = "Se guardó la prefactura con id: " + factura.getUuid();
+		String evento = "Se guardï¿½ la prefactura con id: " + factura.getUuid();
 		RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 		bitacoradao.addReg(registroBitacora);
 
-		return "¡La factura se generó con éxito!";
+		return "ï¿½La factura se generï¿½ con ï¿½xito!";
 	}
 
 	@Override
@@ -187,12 +187,12 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 
 		facturaVTTDAO.guardar(factura);
 		this.crearReporteRenglon(factura, c.getMetodoPago(), c.getTipoDeComprobante().getValor());
-
-		String evento = "Se actualizó la prefactura con id: " + factura.getUuid();
+  
+		String evento = "Se actualizï¿½ la prefactura con id: " + factura.getUuid();
 		RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 		bitacoradao.addReg(registroBitacora);
 
-		return "¡La factura se actualizó con éxito!";
+		return "ï¿½La factura se actualizï¿½ con ï¿½xito!";
 	}
 
 	@Override
@@ -203,8 +203,8 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 				email, false, null);
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
-			// SE TIMBRÓ LA FACTURA CON ÉXITO
-			String evento = "Se timbró la factura guardada con el id: " + uuid + " y se generó el CFDI con UUID: "
+			// SE TIMBRï¿½ LA FACTURA CON ï¿½XITO
+			String evento = "Se timbrï¿½ la factura guardada con el id: " + uuid + " y se generï¿½ el CFDI con UUID: "
 					+ respWBPersonalizada.getUuidFactura();
 			RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 			bitacoradao.addReg(registroBitacora);
@@ -225,8 +225,8 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 				cVO.getEmail(), false, null);
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
-			String evento = "Se actualizo y se timbró la factura guardada con el id: " + uuid
-					+ " y se generó el CFDI con UUID: " + respWBPersonalizada.getUuidFactura();
+			String evento = "Se actualizo y se timbrï¿½ la factura guardada con el id: " + uuid
+					+ " y se generï¿½ el CFDI con UUID: " + respWBPersonalizada.getUuidFactura();
 			RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 			bitacoradao.addReg(registroBitacora);
 			facturaVTTDAO.eliminar(facturaVTTDAO.consultar(uuid));
@@ -245,7 +245,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
 			if (sesion.getAttribute("userName") != null) {
-				String evento = "Se timbró la factura con UUID: " + respWBPersonalizada.getUuidFactura();
+				String evento = "Se timbrï¿½ la factura con UUID: " + respWBPersonalizada.getUuidFactura();
 				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 				bitacoradao.addReg(registroBitacora);
 			}
@@ -296,16 +296,16 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 				facturaVTTDAO.guardar(facturaACancelar);
 				repRenglonDAO.guardar(repRenglon);
 				
-				String evento = "Se canceló la factura guardada con el id:"+facturaACancelar.getUuid();
+				String evento = "Se cancelï¿½ la factura guardada con el id:"+facturaACancelar.getUuid();
 				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 				bitacoradao.addReg(registroBitacora);
 				return (String)respuestaWB.get(2); // regresa "Comprobante cancelado"
 			}
 			
-			// ERROR EN LA CANCELACIÓN DEL CFDI
+			// ERROR EN LA CANCELACIï¿½N DEL CFDI
 			else {
 				RespuestaWebServicePersonalizada respPersonalizada = this.construirMensajeError(respuestaWB);
-				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operación CancelaAck (codigoRespuesta != 0), UUID:"+uuid);
+				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operaciï¿½n CancelaAck (codigoRespuesta != 0), UUID:"+uuid);
 				bitacoradao.addReg(registroBitacora);
 				return respPersonalizada.getMensajeRespuesta();
 			}
@@ -321,7 +321,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 				}
 			}
 			RespuestaWebServicePersonalizada respPersonalizada = this.construirMensajeError(respuestaWB);
-			RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operación CancelaAck (codigoRespuesta no es Integer) UUID:"+uuid);
+			RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operaciï¿½n CancelaAck (codigoRespuesta no es Integer) UUID:"+uuid);
 			bitacoradao.addReg(registroBitacora);
 			return respPersonalizada.getMensajeRespuesta();
 		}
@@ -376,15 +376,15 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 			else if (factura.getEstatus().equals(Estatus.GENERADO)) {
 				pdfFactura.construirPdf(cfdi, imagen, factura.getEstatus(), factura.getComentarios());
 
-				PdfContentByte fondo = writer.getDirectContent();
-				Font fuente = new Font(FontFamily.HELVETICA, 45);
-				Phrase frase = new Phrase("Pre-factura", fuente);
-				fondo.saveState();
-				PdfGState gs1 = new PdfGState();
-				gs1.setFillOpacity(0.5f);
-				fondo.setGState(gs1);
-				ColumnText.showTextAligned(fondo, Element.ALIGN_CENTER, frase, 297, 650, 45);
-				fondo.restoreState();
+//				PdfContentByte fondo = writer.getDirectContent();
+//				Font fuente = new Font(FontFamily.HELVETICA, 45);
+//				Phrase frase = new Phrase("Pre-factura", fuente);
+//				fondo.saveState();
+//				PdfGState gs1 = new PdfGState();
+//				gs1.setFillOpacity(0.5f);
+//				fondo.setGState(gs1);
+//				ColumnText.showTextAligned(fondo, Element.ALIGN_CENTER, frase, 297, 650, 45);
+//				fondo.restoreState();
 			}
 
 			else if (factura.getEstatus().equals(Estatus.CANCELADO)) {
@@ -422,7 +422,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		Imagen imagen = imagenDAO.get(factura.getRfcEmisor());
 
 		mailero.enviaFactura(email, factura, "", imagen, cfdi);
-		String evento = "Se envió  la factura con id: " + factura.getUuid() + " al correo: " + email;
+		String evento = "Se enviï¿½  la factura con id: " + factura.getUuid() + " al correo: " + email;
 		RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 		bitacoradao.addReg(registroBitacora);
 	}
@@ -480,7 +480,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 //				concepto.setImporte(Util.redondearBigD(concepto.getImporte(), cantidadDecimales));
 //			}
 
-			// Agregar ceros después del punto decimal en los impuestos
+			// Agregar ceros despuï¿½s del punto decimal en los impuestos
 			if (concepto.getImpuestos() != null) {
 				List<Traslado> listaTraslado = concepto.getImpuestos().getTraslados().getTraslado();
 				for (Traslado traslado : listaTraslado) {
@@ -558,7 +558,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 					mailero.enviaFactura(email, facturaTimbrada, "", imagen, cfdiTimbrado);
 				}
 				respPersonalizada = new RespuestaWebServicePersonalizada();
-				respPersonalizada.setMensajeRespuesta("¡La factura se timbró con éxito!");
+				respPersonalizada.setMensajeRespuesta("ï¿½La factura se timbrï¿½ con ï¿½xito!");
 				respPersonalizada.setUuidFactura(timbreFD.getUUID());
 				return respPersonalizada;
 			} // FIN TIMBRADO EXITOSO
@@ -587,9 +587,9 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 	}
 
 	private RespuestaWebServicePersonalizada construirMensajeError(List<Object> respuestaWB) {
-		StringBuilder respuestaError = new StringBuilder("Excepción en caso de error: ");
+		StringBuilder respuestaError = new StringBuilder("Excepciï¿½n en caso de error: ");
 		respuestaError.append(respuestaWB.get(0) + "\r\n");
-		respuestaError.append("Código de error: " + respuestaWB.get(1) + "\r\n");
+		respuestaError.append("Cï¿½digo de error: " + respuestaWB.get(1) + "\r\n");
 		respuestaError.append("Mensaje de respuesta: " + respuestaWB.get(2) + "\r\n");
 		respuestaError.append(respuestaWB.get(6) + "\r\n");
 		respuestaError.append(respuestaWB.get(7) + "\r\n");
@@ -603,7 +603,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 	private RespuestaWebServicePersonalizada construirMensaje(List<Object> respuestaWS) {
 		StringBuilder respuesta = new StringBuilder("Mensaje de respuesta: ");
 		respuesta.append(respuestaWS.get(0)+ "\r\n");
-		respuesta.append("Código de error: " + respuestaWS.get(1) + "\r\n");
+		respuesta.append("Cï¿½digo de error: " + respuestaWS.get(1) + "\r\n");
 		respuesta.append("Mensaje de respuesta: " + respuestaWS.get(2) + "\r\n");
 		respuesta.append("XML : " + respuestaWS.get(3) + "\r\n");
 		respuesta.append("QRCode: " + respuestaWS.get(4) + "\r\n");
