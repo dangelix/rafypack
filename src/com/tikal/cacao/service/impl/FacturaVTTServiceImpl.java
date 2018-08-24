@@ -161,9 +161,9 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 	public String generar(ComprobanteConComentarioVO comprobanteConComentario, HttpSession sesion) {
 		Comprobante c = comprobanteConComentario.getComprobante();
 		String xmlComprobante = Util.marshallComprobante33(c, false);
-
+		//comprobanteConComentario.getNoOrden()
 		FacturaVTT factura = new FacturaVTT(Util.randomString(10), xmlComprobante, c.getEmisor().getRfc(),
-				c.getReceptor().getNombre(), Util.xmlGregorianAFecha(c.getFecha()), null, null);
+				c.getReceptor().getNombre(), Util.xmlGregorianAFecha(c.getFecha()), null, null, comprobanteConComentario.getNoOrden());
 		factura.setComentarios(comprobanteConComentario.getComentario());
 
 		facturaVTTDAO.guardar(factura);
@@ -182,7 +182,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		String xmlComprobante = Util.marshallComprobante33(c, false);
 
 		FacturaVTT factura = new FacturaVTT(uuid, xmlComprobante, c.getEmisor().getRfc(), c.getReceptor().getNombre(),
-				Util.xmlGregorianAFecha(c.getFecha()), null, null);
+				Util.xmlGregorianAFecha(c.getFecha()), null, null, comprobanteConComentario.getNoOrden());
 		factura.setComentarios(comprobanteConComentario.getComentario());
 
 		facturaVTTDAO.guardar(factura);
@@ -200,7 +200,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		FacturaVTT factura = facturaVTTDAO.consultar(uuid);
 		Comprobante comprobante = Util.unmarshallCFDI33XML(factura.getCfdiXML());
 		RespuestaWebServicePersonalizada respWBPersonalizada = this.timbrar(comprobante, factura.getComentarios(),
-				email, false, null);
+				email, false, null, factura.getNoOrden());
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
 			// SE TIMBR� LA FACTURA CON �XITO
@@ -222,7 +222,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 	public String timbrar(String json, String uuid, HttpSession sesion) {
 		ComprobanteVO cVO = (ComprobanteVO) JsonConvertidor.fromJson(json, ComprobanteVO.class);
 		RespuestaWebServicePersonalizada respWBPersonalizada = this.timbrar(cVO.getComprobante(), cVO.getComentarios(),
-				cVO.getEmail(), false, null);
+				cVO.getEmail(), false, null, cVO.getNoOrden());
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
 			String evento = "Se actualizo y se timbr� la factura guardada con el id: " + uuid
@@ -239,13 +239,13 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 	}
 
 	@Override
-	public String timbrar(ComprobanteVO comprobanteVO, HttpSession sesion, boolean auto, FacturaVTT.DatosExtra extra) {
+	public String timbrar(ComprobanteVO comprobanteVO, HttpSession sesion, boolean auto, FacturaVTT.DatosExtra extra, String noOrden) {
 		RespuestaWebServicePersonalizada respWBPersonalizada = this.timbrar(comprobanteVO.getComprobante(),
-				comprobanteVO.getComentarios(), comprobanteVO.getEmail(), auto, extra);
+				comprobanteVO.getComentarios(), comprobanteVO.getEmail(), auto, extra, noOrden);
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
 			if (sesion.getAttribute("userName") != null) {
-				String evento = "Se timbr� la factura con UUID: " + respWBPersonalizada.getUuidFactura();
+				String evento = "Se timbró la factura con UUID: " + respWBPersonalizada.getUuidFactura();
 				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 				bitacoradao.addReg(registroBitacora);
 			}
@@ -372,9 +372,9 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 			pdfFactura.getDocument().open();
 			if (factura.getEstatus().equals(Estatus.TIMBRADO))
 				pdfFactura.construirPdf(cfdi, factura.getSelloDigital(), factura.getCodigoQR(), imagen,
-						factura.getEstatus(), factura.getComentarios(), factura.getDatosExtra());
+						factura.getEstatus(), factura.getComentarios(), factura.getDatosExtra(), factura.getNoOrden());
 			else if (factura.getEstatus().equals(Estatus.GENERADO)) {
-				pdfFactura.construirPdf(cfdi, imagen, factura.getEstatus(), factura.getComentarios());
+				pdfFactura.construirPdfCot(cfdi, imagen, factura.getEstatus(), factura.getComentarios(), factura.getNoOrden());
 
 //				PdfContentByte fondo = writer.getDirectContent();
 //				Font fuente = new Font(FontFamily.HELVETICA, 45);
@@ -390,7 +390,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 			else if (factura.getEstatus().equals(Estatus.CANCELADO)) {
 				pdfFactura.construirPdfCancelado(cfdi, factura.getSelloDigital(), factura.getCodigoQR(), imagen,
 						factura.getEstatus(), factura.getSelloCancelacion(), factura.getFechaCancelacion(),
-						factura.getComentarios(), factura.getDatosExtra());
+						factura.getComentarios(), factura.getDatosExtra(),factura.getNoOrden());
 
 				pdfFactura.crearMarcaDeAgua("CANCELADO", writer);
 			}
@@ -501,7 +501,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 	}
 
 	private RespuestaWebServicePersonalizada timbrar(Comprobante comprobante, String comentarios, String email,
-			boolean auto, FacturaVTT.DatosExtra extra) {
+			boolean auto, FacturaVTT.DatosExtra extra, String noOrden) {
 		this.redondearCantidades(comprobante);
 		this.agregarCerosATasaOCuota(comprobante.getImpuestos());
 		if (!auto) {
@@ -537,7 +537,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 				Date fechaCertificacion = Util.xmlGregorianAFecha(timbreFD.getFechaTimbrado());
 				FacturaVTT facturaTimbrada = new FacturaVTT(timbreFD.getUUID(), xmlCFDITimbrado,
 						cfdiTimbrado.getEmisor().getRfc(), cfdiTimbrado.getReceptor().getNombre(), fechaCertificacion,
-						selloDigital, bytesQRCode);
+						selloDigital, bytesQRCode, noOrden);
 				
 				if(auto){
 					facturaTimbrada.setDatosExtra(extra);
@@ -614,5 +614,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		respPersonalizada.setMensajeRespuesta(respuesta.toString());
 		return respPersonalizada;
 	}
+
+
 
 }

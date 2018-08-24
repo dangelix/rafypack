@@ -947,7 +947,8 @@ app.controller("comprobante33", [ '$scope', '$location', 'comprobanteService33',
 					
 					var send ={
 							comentarios: $scope.comentarios,
-							comprobante : $scope.comprobante
+							comprobante : $scope.comprobante,
+							noOrden: $scope.noOrden
 							
 					}
 					comprobanteService33.guardarPrefactura(send).then(function(data){
@@ -994,7 +995,8 @@ app.controller("comprobante33", [ '$scope', '$location', 'comprobanteService33',
 				var send ={
 						comentarios: $scope.comentarios,
 						comprobante : $scope.comprobante,
-						email : $scope.comprobante.email
+						email : $scope.comprobante.email,
+						noOrden: $scope.noOrden
 						
 				} 
 				$scope.procesando=true;

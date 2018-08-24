@@ -89,11 +89,14 @@ public class FacturaVTTController {
 	@RequestMapping(value = "/generar", method = RequestMethod.POST, consumes = "application/json")
 	public void generar(HttpServletRequest req, HttpServletResponse res, @RequestBody String json) {
 		//ServicioSesion.verificarPermiso(req, usuariodao, perfildao, per);
+		System.out.println("Yisus manda:"+json);
 		try {
 			AsignadorDeCharset.asignar(req, res);
+			
 			if (ServicioSesion.verificarPermiso(req, usuarioDAO, perfilDAO, 11)) {
 				ComprobanteConComentarioVO comprobanteConComentario = 
 						(ComprobanteConComentarioVO) JsonConvertidor.fromJson(json, ComprobanteConComentarioVO.class);
+				System.out.println("numero de orden:"+comprobanteConComentario.getNoOrden());
 				String resultado = facturaVTTService.generar(comprobanteConComentario, req.getSession());
 				
 				res.getWriter().println(resultado);
@@ -157,7 +160,7 @@ public class FacturaVTTController {
 			AsignadorDeCharset.asignar(req, res);
 			if (ServicioSesion.verificarPermiso(req, usuarioDAO, perfilDAO, 11)) {
 				ComprobanteVO cVO = (ComprobanteVO) JsonConvertidor.fromJson(json, ComprobanteVO.class);
-				String textoRespuesta = facturaVTTService.timbrar(cVO, req.getSession(), false, null);
+				String textoRespuesta = facturaVTTService.timbrar(cVO, req.getSession(), false, null, cVO.getNoOrden());
 				res.setContentType("text/html");
 				res.getWriter().println(textoRespuesta);
 			} else {

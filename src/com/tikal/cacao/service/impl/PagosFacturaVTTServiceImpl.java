@@ -169,11 +169,11 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 				
 				
 				respPersonalizada = new RespuestaWebServicePersonalizada();
-				respPersonalizada.setMensajeRespuesta("¡La factura se timbró con éxito!");
+				respPersonalizada.setMensajeRespuesta("ï¿½La factura se timbrï¿½ con ï¿½xito!");
 				respPersonalizada.setUuidFactura(timbreFD.getUUID());
 				
 				RegistroBitacora br = new RegistroBitacora();
-				br.setEvento("Se timbró el Complemento de pago");
+				br.setEvento("Se timbrï¿½ el Complemento de pago");
 				br.setFecha(new Date());
 				br.setTipo("Operativo");
 				br.setUsuario("Usuario");
@@ -257,9 +257,9 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 			pdfFactura.getDocument().open();
 			if (factura.getEstatus().equals(Estatus.TIMBRADO))
 				pdfFactura.construirPdf(cfdi, factura.getSelloDigital(), factura.getCodigoQR(), imagen,
-						factura.getEstatus(), factura.getComentarios(), factura.getDatosExtra());
+						factura.getEstatus(), factura.getComentarios(), factura.getDatosExtra(), factura.getNoOrden());
 			else if (factura.getEstatus().equals(Estatus.GENERADO)) {
-				pdfFactura.construirPdf(cfdi, imagen, factura.getEstatus(), factura.getComentarios());
+				pdfFactura.construirPdf(cfdi, imagen, factura.getEstatus(), factura.getComentarios(),factura.getNoOrden());
 
 				PdfContentByte fondo = writer.getDirectContent();
 				Font fuente = new Font(FontFamily.HELVETICA, 45);
@@ -275,7 +275,7 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 			else if (factura.getEstatus().equals(Estatus.CANCELADO)) {
 				pdfFactura.construirPdfCancelado(cfdi, factura.getSelloDigital(), factura.getCodigoQR(), imagen,
 						factura.getEstatus(), factura.getSelloCancelacion(), factura.getFechaCancelacion(),
-						factura.getComentarios(), factura.getDatosExtra());
+						factura.getComentarios(), factura.getDatosExtra(), factura.getNoOrden());
 
 				pdfFactura.crearMarcaDeAgua("CANCELADO", writer);
 			}
@@ -336,16 +336,16 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 				pagosFacturaVttDAO.guardar(facturaACancelar);
 				renglonDAO.guardar(repRenglon);
 				
-				String evento = "Se canceló la factura guardada con el id:"+facturaACancelar.getUuid();
+				String evento = "Se cancelï¿½ la factura guardada con el id:"+facturaACancelar.getUuid();
 				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 				bitacoradao.addReg(registroBitacora);
 				return (String)respuestaWB.get(2); // regresa "Comprobante cancelado"
 			}
 			
-			// ERROR EN LA CANCELACIÓN DEL CFDI
+			// ERROR EN LA CANCELACIï¿½N DEL CFDI
 			else {
 				RespuestaWebServicePersonalizada respPersonalizada = this.construirMensajeError(respuestaWB);
-				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operación CancelaAck (codigoRespuesta != 0), UUID:"+uuid);
+				RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operaciï¿½n CancelaAck (codigoRespuesta != 0), UUID:"+uuid);
 				bitacoradao.addReg(registroBitacora);
 				return respPersonalizada.getMensajeRespuesta();
 			}
@@ -361,7 +361,7 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 				}
 			}
 			RespuestaWebServicePersonalizada respPersonalizada = this.construirMensajeError(respuestaWB);
-			RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operación CancelaAck (codigoRespuesta no es Integer) UUID:"+uuid);
+			RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", respPersonalizada.getMensajeRespuesta() + "Operaciï¿½n CancelaAck (codigoRespuesta no es Integer) UUID:"+uuid);
 			bitacoradao.addReg(registroBitacora);
 			return respPersonalizada.getMensajeRespuesta();
 		}
@@ -369,9 +369,9 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 	}
 	
 	private RespuestaWebServicePersonalizada construirMensajeError(List<Object> respuestaWB) {
-		StringBuilder respuestaError = new StringBuilder("Excepción en caso de error: ");
+		StringBuilder respuestaError = new StringBuilder("Excepciï¿½n en caso de error: ");
 		respuestaError.append(respuestaWB.get(0) + "\r\n");
-		respuestaError.append("Código de error: " + respuestaWB.get(1) + "\r\n");
+		respuestaError.append("Cï¿½digo de error: " + respuestaWB.get(1) + "\r\n");
 		respuestaError.append("Mensaje de respuesta: " + respuestaWB.get(2) + "\r\n");
 		respuestaError.append(respuestaWB.get(6) + "\r\n");
 		respuestaError.append(respuestaWB.get(7) + "\r\n");
@@ -385,7 +385,7 @@ public class PagosFacturaVTTServiceImpl implements PagosFacturaVTTService {
 	private RespuestaWebServicePersonalizada construirMensaje(List<Object> respuestaWS) {
 		StringBuilder respuesta = new StringBuilder("Mensaje de respuesta: ");
 		respuesta.append(respuestaWS.get(0)+ "\r\n");
-		respuesta.append("Código de error: " + respuestaWS.get(1) + "\r\n");
+		respuesta.append("Cï¿½digo de error: " + respuestaWS.get(1) + "\r\n");
 		respuesta.append("Mensaje de respuesta: " + respuestaWS.get(2) + "\r\n");
 		respuesta.append("XML : " + respuestaWS.get(3) + "\r\n");
 		respuesta.append("QRCode: " + respuestaWS.get(4) + "\r\n");

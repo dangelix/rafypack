@@ -52,7 +52,7 @@ public interface FacturaVTTService {
 	 * @return un texto con el resultado de la operaci&oacute;n de Timbrado del
 	 * CFDI 3.3
 	 */
-	String timbrar(ComprobanteVO comprobanteVO, HttpSession sesion, boolean auto, FacturaVTT.DatosExtra extra);
+	String timbrar(ComprobanteVO comprobanteVO, HttpSession sesion, boolean auto, FacturaVTT.DatosExtra extra, String noOrden);
 	
 	/**
 	 * <p>Timbra un CFDI 3.3 que ya ha sido guardado como un objeto 
@@ -76,4 +76,6 @@ public interface FacturaVTTService {
 	PdfWriter obtenerPDF(FacturaVTT factura, OutputStream os) throws MalformedURLException, DocumentException, IOException;
 
 	void enviarEmail(String email, String uuid, HttpSession sesion);
+
+	//String timbrar(ComprobanteVO cVO, HttpSession session, boolean auto, Object extra, String noOrden);
 }

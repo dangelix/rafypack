@@ -146,6 +146,18 @@
 					</div>
 				</div>
 			</div>
+			<div class="row">
+			<div class="col-md-2">
+				<div class="form-group ">
+						<label for="example-text-input" class="col-2 col-form-label">N&uacute;mero
+						de Orden:</label>
+						<div class="col-10">
+							
+								<input class="form-control facInp" type="text" value=""
+								 ng-model="noOrden" >
+						</div>
+					</div></div>
+			</div>
 			<hr>
 			<div class="row">
 				<div class="col-md-2">
@@ -650,7 +662,7 @@
 			<h4>Receptor</h4>
 			<div class="form-group row">
 				<form name="formCaptura">
-					<div class="col-md-6">
+					<div class="col-md-4">
 						<label for="example-text-input" class="col-2 col-form-label">*RFC:</label>
 						<div class="col-10">
 							<select class="facInp" ng-model="comprobante.receptor"
@@ -674,6 +686,7 @@
 							<!-- 							id="nombre" ng-model="comprobante.receptor.nombre" name="nombre"> -->
 						</div>
 					</div>
+					
 					<div class="col-md-12">
 						<div class="form-group ">
 							<label for="example-text-input" class="col-2 col-form-label">Uso

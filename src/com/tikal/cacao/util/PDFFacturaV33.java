@@ -152,7 +152,7 @@ public class PDFFacturaV33 {
 	 * @throws IOException
 	 */
 	public Document construirPdf(Comprobante comprobante, String selloDigital, byte[] bytesQRCode, Imagen imagen,
-			Estatus estatus, String comentarios, DatosExtra datosExtra)
+			Estatus estatus, String comentarios, DatosExtra datosExtra, String noOrden)
 			throws MalformedURLException, DocumentException, IOException {
 		List<Object> complementoTFD = comprobante.getComplemento().get(0).getAny();
 		TimbreFiscalDigital tfd = null;
@@ -164,7 +164,7 @@ public class PDFFacturaV33 {
 			}
 		}
 
-		this.construirBoceto(comprobante, imagen, estatus, tfd, comentarios, datosExtra);
+		this.construirBoceto(comprobante, imagen, estatus, tfd, comentarios, datosExtra, noOrden);
 	
 		this.construirTimbre(selloDigital, bytesQRCode, tfd);
 		
@@ -187,15 +187,21 @@ public class PDFFacturaV33 {
 	 * @throws DocumentException
 	 * @throws IOException
 	 */
-	public Document construirPdf(Comprobante comprobante, Imagen imagen, Estatus estatus, String comentarios)
+	public Document construirPdf(Comprobante comprobante, Imagen imagen, Estatus estatus, String comentarios, String noOrden)
 			throws MalformedURLException, DocumentException, IOException {
-		construirBoceto(comprobante, imagen, estatus, null, comentarios, null);
+		construirBoceto(comprobante, imagen, estatus, null, comentarios, null, noOrden);
 		construirHechoPor();
 		return document;
 	}
 
+	public Document construirPdfCot(Comprobante comprobante, Imagen imagen, Estatus estatus, String comentarios, String noOrden)
+			throws MalformedURLException, DocumentException, IOException {
+		construirBocetoCot(comprobante, imagen, estatus, null, comentarios, null, noOrden);
+		construirHechoPor();
+		return document;
+	}
 	public Document construirPDFComercioExterior(Comprobante comprobante, String selloDigital, byte[] bytesQRCode,
-			Imagen imagen, Estatus estatus, String comentarios, DatosExtra datosExtra)
+			Imagen imagen, Estatus estatus, String comentarios, DatosExtra datosExtra, String noOrden)
 			throws MalformedURLException, DocumentException, IOException {
 		List<Object> complementoTFD = comprobante.getComplemento().get(0).getAny();
 		TimbreFiscalDigital tfd = null;
@@ -207,7 +213,7 @@ public class PDFFacturaV33 {
 			}
 		}
 
-		this.construirBoceto(comprobante, imagen, estatus, tfd, comentarios, datosExtra);
+		this.construirBoceto(comprobante, imagen, estatus, tfd, comentarios, datosExtra, noOrden);
 		this.construirTimbre(selloDigital, bytesQRCode, tfd);
 		// this.construirHechoPor();
 
@@ -216,7 +222,7 @@ public class PDFFacturaV33 {
 
 	public Document construirPdfCancelado(Comprobante comprobante, String selloDigital, byte[] bytesQRCode,
 			Imagen imagen, Estatus estatus, String selloCancelacion, Date fechaCancelacion, String comentarios,
-			DatosExtra datosExtra) throws DocumentException, MalformedURLException, IOException {
+			DatosExtra datosExtra, String noOrden) throws DocumentException, MalformedURLException, IOException {
 
 		List<Object> complementoTFD = comprobante.getComplemento().get(0).getAny();
 		TimbreFiscalDigital tfd = null;
@@ -228,15 +234,65 @@ public class PDFFacturaV33 {
 			}
 		}
 
-		this.construirBoceto(comprobante, imagen, estatus, tfd, comentarios, datosExtra);
+		this.construirBoceto(comprobante, imagen, estatus, tfd, comentarios, datosExtra, noOrden);
 		this.construirTimbre(selloDigital, bytesQRCode, tfd);
 //		this.construirHechoPor();
 		return document;
 	}
 
 	private void construirBoceto(Comprobante comprobante, Imagen imagen, Estatus estatus, TimbreFiscalDigital tfd,
-			String comentarios, DatosExtra datosExtra) throws MalformedURLException, DocumentException, IOException {
-		this.construirEncabezado(comprobante, imagen);
+			String comentarios, DatosExtra datosExtra, String noOrden) throws MalformedURLException, DocumentException, IOException {
+		this.construirEncabezado(comprobante, imagen, noOrden);
+		this.construirInfoReceptorYLugarFecha(comprobante, estatus, tfd);
+		this.construirUsoCFDIYDatosFiscales(comprobante, estatus, tfd);
+
+		ComercioExterior complementoComExt = Util.obtenerComplComercioExterior(comprobante);
+		if (datosExtra == null) {
+			datosExtra = new FacturaVTT().getDatosExtra();
+		}
+		if (this.descripcionTipoCFDI.compareTo("Pago") != 0) {
+			if(comprobante.getCfdiRelacionados()!=null){
+				this.crearTablaDoctoRelacionado(comprobante);
+			}
+			this.construirComplementoComercioExterior(comprobante, complementoComExt, datosExtra);
+			List<com.tikal.cacao.sat.cfd33.Comprobante.Impuestos.Traslados.Traslado> traslados = comprobante
+					.getImpuestos().getTraslados().getTraslado();
+			BigDecimal tasaOCuota = null;
+			for (com.tikal.cacao.sat.cfd33.Comprobante.Impuestos.Traslados.Traslado traslado : traslados) {
+				if (traslado.getImpuesto().getValor().contentEquals("002")) {
+					tasaOCuota = traslado.getTasaOCuota();
+				}
+			}
+
+			this.construirTablaIVA(tasaOCuota.doubleValue());
+			this.construirTablaConceptos(comprobante);
+			this.construirComentariosEImporteConLetra(comprobante, comentarios, datosExtra.getImporteichon());
+			
+			this.construirLeyendaFiscalYTotal(comprobante, estatus);
+		} else {
+
+			this.construirTablaConceptosPago(comprobante);
+			this.construirComplementoPago(comprobante);
+//			this.construirComentariosEImporteConLetra(comprobante, comentarios, datosExtra.getImporteichon());
+			Complemento complemento= comprobante.getComplemento().get(0);
+			List<Object> lista=complemento.getAny();
+			Pago pago=null;
+			for(Object element: lista){
+				if(element instanceof Pagos){
+					Pagos pagos= (Pagos)element;
+					pago= pagos.getPago().get(0);
+				}
+			}
+			this.construirTablaDocumentosRelacionados(comprobante, pago);
+		}
+		//this.construirTablaPagare(comprobante);
+	}
+
+	
+	
+	private void construirBocetoCot(Comprobante comprobante, Imagen imagen, Estatus estatus, TimbreFiscalDigital tfd,
+			String comentarios, DatosExtra datosExtra, String noOrden) throws MalformedURLException, DocumentException, IOException {
+		this.construirEncabezadoCot(comprobante, imagen, noOrden);
 		this.construirInfoReceptorYLugarFecha(comprobante, estatus, tfd);
 		this.construirUsoCFDIYDatosFiscales(comprobante, estatus, tfd);
 
@@ -282,6 +338,7 @@ public class PDFFacturaV33 {
 		this.construirTablaPagare(comprobante);
 	}
 
+	
 	private void construirTimbre(String selloDigital, byte[] bytesQRCode, TimbreFiscalDigital tfd)
 			throws DocumentException, MalformedURLException, IOException {
 		// QRCode Y SELLOS DIGITALES
@@ -460,7 +517,7 @@ public class PDFFacturaV33 {
 		document.add(tablaHechoPor);
 	}
 
-	private void construirEncabezado(Comprobante comprobante, Imagen imagen)
+	private void construirEncabezado(Comprobante comprobante, Imagen imagen, String noOrden)
 			throws DocumentException, MalformedURLException, IOException {
 		PdfPTable tablaEncabezado = new PdfPTable(3);
 		tablaEncabezado.setWidthPercentage(100);
@@ -518,19 +575,93 @@ public class PDFFacturaV33 {
 			if(comprobante.getTipoDeComprobante().getValor().compareToIgnoreCase("E")==0){
 				agregarCeldaSinBorde("Nota de Cr�dito", fontHeadFactura, subTablaEncabezado, true);	
 			}else{
-				agregarCeldaSinBorde("FACTURA", fontHeadFactura, subTablaEncabezado, true);
+				agregarCeldaSinBorde("Factura", fontHeadFactura, subTablaEncabezado, true);
 			}
 		}else{
 			agregarCeldaSinBorde("Complemento de Pago", fontHeadFactura, subTablaEncabezado, true);
 		}
-		subTablaEncabezado.addCell(celdaEspacio);
+	//	
 		agregarCeldaSinBorde(getFolioYSerie(comprobante), fontSerieYFolio, subTablaEncabezado, true);
+		subTablaEncabezado.addCell(celdaEspacio);
+		agregarCeldaSinBorde("No. Orden: "+noOrden, fontHeadFactura, subTablaEncabezado, true);
 		celdaSubTablaEncabezado.addElement(subTablaEncabezado);
 		celdaSubTablaEncabezado.setBorderColor(BaseColor.GRAY);
 		tablaEncabezado.addCell(celdaSubTablaEncabezado);
 		document.add(tablaEncabezado);
 	}
 
+	private void construirEncabezadoCot(Comprobante comprobante, Imagen imagen, String noOrden)
+			throws DocumentException, MalformedURLException, IOException {
+		PdfPTable tablaEncabezado = new PdfPTable(3);
+		tablaEncabezado.setWidthPercentage(100);
+		tablaEncabezado.setWidths(new float[] { 30, 40, 30 });
+
+		// ENCABEZADO DEL COMPROBANTE
+		PdfPTable subTablaLogo = new PdfPTable(1);
+		PdfPCell celdaLogo = new PdfPCell();
+		celdaLogo.setBorder(PdfPCell.NO_BORDER);
+		Image imgLogo;
+		if (imagen != null) {
+			imgLogo = Image.getInstance(new URL(imagen.getImage()));
+			imgLogo.setScaleToFitHeight(false);
+			imgLogo.scaleToFit(125F, 37.25F);
+			Chunk chunkLogo = new Chunk(imgLogo, 0, -25);
+			celdaLogo.addElement(chunkLogo);
+		} // else {
+		// imgLogo = Image.getInstance("images/Logo-Tikal.png");
+		// imgLogo.setScaleToFitHeight(false);
+		// imgLogo.scaleToFit(125F, 37.25F);
+		// }
+
+		subTablaLogo.addCell(celdaLogo);
+		PdfPCell celdaTablaLogo = new PdfPCell();
+		celdaTablaLogo.addElement(subTablaLogo);
+		celdaTablaLogo.disableBorderSide(PdfPCell.RIGHT);
+		celdaTablaLogo.setBorderColor(BaseColor.GRAY);
+		celdaTablaLogo.setBorderWidth(1);
+		tablaEncabezado.addCell(celdaTablaLogo);
+
+		PdfPCell celdaDatosEmisor = new PdfPCell();
+		Phrase fraseDatosEmisor = new Phrase();
+		Chunk chunkNombreEmisor = new Chunk("", font2);
+		if (comprobante.getEmisor().getNombre() != null) {
+			chunkNombreEmisor = new Chunk(comprobante.getEmisor().getNombre(), font2);
+		}
+		Chunk chunkRFCEmisor = new Chunk("R.F.C. ".concat(comprobante.getEmisor().getRfc()), font3);
+		Chunk chunkDomicilioEmisor = new Chunk("Domicilio Fiscal: AV JUAN MONROY S/N PARQUE INDUSTRIAL", font3);
+		fraseDatosEmisor.add(chunkNombreEmisor);
+		fraseDatosEmisor.add(Chunk.NEWLINE);
+		fraseDatosEmisor.add(chunkRFCEmisor);
+		fraseDatosEmisor.add(Chunk.NEWLINE);
+		fraseDatosEmisor.add(chunkDomicilioEmisor);
+		celdaDatosEmisor.setBorderWidth(1);
+		celdaDatosEmisor.disableBorderSide(PdfPCell.LEFT);
+		celdaDatosEmisor.addElement(fraseDatosEmisor);
+		celdaDatosEmisor.setHorizontalAlignment(Element.ALIGN_CENTER);
+		celdaDatosEmisor.setBorderColor(BaseColor.GRAY);
+		tablaEncabezado.addCell(celdaDatosEmisor);
+
+		PdfPCell celdaSubTablaEncabezado = new PdfPCell();
+		celdaSubTablaEncabezado.setBorderWidth(1);
+		PdfPTable subTablaEncabezado = new PdfPTable(1);
+		if (this.descripcionTipoCFDI.compareTo("Pago") != 0) {
+			if(comprobante.getTipoDeComprobante().getValor().compareToIgnoreCase("E")==0){
+				agregarCeldaSinBorde("Nota de Cr�dito", fontHeadFactura, subTablaEncabezado, true);	
+			}else{
+				agregarCeldaSinBorde("No. Orden", fontHeadFactura, subTablaEncabezado, true);
+			}
+		}else{
+			agregarCeldaSinBorde("Complemento de Pago", fontHeadFactura, subTablaEncabezado, true);
+		}
+		subTablaEncabezado.addCell(celdaEspacio);
+		agregarCeldaSinBorde(noOrden, fontSerieYFolio, subTablaEncabezado, true);
+		celdaSubTablaEncabezado.addElement(subTablaEncabezado);
+		celdaSubTablaEncabezado.setBorderColor(BaseColor.GRAY);
+		tablaEncabezado.addCell(celdaSubTablaEncabezado);
+		document.add(tablaEncabezado);
+	}
+
+	
 	private void construirInfoReceptorYLugarFecha(Comprobante comprobante, Estatus estatus, TimbreFiscalDigital tfd)
 			throws DocumentException {
 		PdfPTable tablaReceptorYHoraCert = new PdfPTable(3);
@@ -1206,13 +1337,29 @@ public class PDFFacturaV33 {
 		
 		PdfPTable tablaPagare = new PdfPTable(2);
 		tablaPagare.setWidthPercentage(100);
-		agregarCeldaConFondo("Pagaré", fontHead, tablaPagare, false);
-		  Paragraph p7 = new Paragraph("DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE EN ESTA CIUDAD DE LEÓN, GTO. A LA ORDEN DE TECNO SUPPORT LEÓN S.A. DE C.V. LA CANTIDAD DE (",fontLeyendaFiscal);
+	//	agregarCeldaConFondo("Pagaré", fontHead, tablaPagare, false);
+		  Paragraph p7 = new Paragraph("DEBO(EMOS) Y PAGARE(MOS) INCONDICIONALMENTE EN ESTA CIUDAD DE LEÓN, GTO. A LA ORDEN DE TECNO SUPPORT LEÓN S.A. DE C.V. LA CANTIDAD DE ( $"+
+				  comprobante.getTotal()+"  M.N.) POR EL IMPORTE RECIBIDO EN MERCANCÍAS, RECIBIDAS A MI(NUESTRA) ENTERA SATISFACCIÓN. ESTE PAGARÉ ES MERCANTIL Y ESTÁ REGIDO POR LA LEY GENERAL"
+				  +" DE TÍTULOS Y OPERACIONES DE CRÉDITO EN SU ARTÍCULO 173 PARTE FINAL Y DEMAS ARTS. CORRELATIVOS POR NO SER PAGARÉ DOMICILIADO. SI NO ES PAGDO A SU VENCIMIENTO , CAUSARÁ EL "
+				  +"2.5% MENSUAL DE INTERESES MORATORIOS, SIN QUE POR ESTO SE CONSIDEREPRORROGADO EL PLAZO.",fontLeyendaFiscal);
           PdfPCell c7 = new PdfPCell(p7);
           c7.setHorizontalAlignment(Element.ALIGN_LEFT);
           c7.setColspan(2);
           tablaPagare.addCell(c7);
 		tablaPagare.setSpacingAfter(5);
+		
+		Paragraph p8 = new Paragraph("RECIBE:\n",fontLeyendaFiscal);
+        PdfPCell c8 = new PdfPCell(p8);
+        c8.setHorizontalAlignment(Element.ALIGN_LEFT);
+        c8.setColspan(1);
+        tablaPagare.addCell(c8);
+        
+        Paragraph p9 = new Paragraph("FIRMA DE CONFORMIDAD:\n",fontLeyendaFiscal);
+        PdfPCell c9 = new PdfPCell(p9);
+        c9.setHorizontalAlignment(Element.ALIGN_LEFT);
+        c9.setColspan(1);
+        tablaPagare.addCell(c9);
+		
 		document.add(tablaPagare);
 		
 		

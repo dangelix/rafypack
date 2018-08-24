@@ -9,6 +9,18 @@ public class ComprobanteVO {
 	private Comprobante comprobante;
 	
 	private String comentarios;
+	
+	private String noOrden;
+	
+	
+
+	public String getNoOrden() {
+		return noOrden;
+	}
+
+	public void setNoOrden(String noOrden) {
+		this.noOrden = noOrden;
+	}
 
 	public String getEmail() {
 		return email;

@@ -50,13 +50,13 @@ public class EmailSender {
 		Properties props = new Properties();
 		Session session = Session.getDefaultInstance(props, null);
 
-		String mensaje = "Su nueva contraseña es: " + pass;
+		String mensaje = "Su nueva contraseï¿½a es: " + pass;
 
 		try {
 			Message msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress("no.reply.fcon@gmail.com", "Password Reset"));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(emailReceptor, nombreReceptor));
-			msg.setSubject("Contraseña Nueva");
+			msg.setSubject("Contraseï¿½a Nueva");
 			msg.setText(mensaje);
 			Transport.send(msg);
 
@@ -118,7 +118,7 @@ public class EmailSender {
 ////			
 //			msg.setText("correo de prueba");
 			
-			msg.setFrom(new InternetAddress("no.reply.fcon@gmail.com", "Facturación"));
+			msg.setFrom(new InternetAddress("no.reply.fcon@gmail.com", "Facturaciï¿½n"));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(emailReceptor, "Empresa"));
 			msg.setSubject("Factura "+factura.getUuid());
 //			msg.setText("Prueba de correo 2");
@@ -138,7 +138,7 @@ public class EmailSender {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch(OverQuotaException e){
-			System.out.println("Se alcanzó");
+			System.out.println("Se alcanzï¿½");
 		}
 	}
 	
@@ -169,14 +169,14 @@ public class EmailSender {
 			pdfFactura.getDocument().open();
 			
 			if (factura.getEstatus().equals(Estatus.TIMBRADO)){
-				pdfFactura.construirPdf(cfdi, factura.getSelloDigital(), factura.getCodigoQR(),urlImg, factura.getEstatus(), factura.getComentarios(), factura.getDatosExtra());
+				pdfFactura.construirPdf(cfdi, factura.getSelloDigital(), factura.getCodigoQR(),urlImg, factura.getEstatus(), factura.getComentarios(), factura.getDatosExtra(),factura.getNoOrden());
 			} 
 			else if (factura.getEstatus().equals(Estatus.GENERADO)){
-				pdfFactura.construirPdf(cfdi, urlImg, factura.getEstatus(), factura.getComentarios());
+				pdfFactura.construirPdf(cfdi, urlImg, factura.getEstatus(), factura.getComentarios(),factura.getNoOrden());
 			}
 			else if (factura.getEstatus().equals(Estatus.CANCELADO)) {
 				pdfFactura.construirPdfCancelado(cfdi, factura.getSelloDigital(), factura.getCodigoQR(), urlImg, factura.getEstatus(),
-						factura.getSelloCancelacion(), factura.getFechaCancelacion(), factura.getComentarios(), factura.getDatosExtra());
+						factura.getSelloCancelacion(), factura.getFechaCancelacion(), factura.getComentarios(), factura.getDatosExtra(), factura.getNoOrden());
 				pdfFactura.crearMarcaDeAgua("CANCELADO", writer);
 			}
 			pdfFactura.getDocument().close();
@@ -194,7 +194,7 @@ public class EmailSender {
 			attachmentx.setContent(attachmentDataStreamx,"text/xml");
 			mp.addBodyPart(attachmentx);
 			
-			msg.setFrom(new InternetAddress("no.reply.fcon@gmail.com", "Facturación"));
+			msg.setFrom(new InternetAddress("no.reply.fcon@gmail.com", "Facturaciï¿½n"));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(emailReceptor, "Empresa"));
 			msg.setSubject("Factura "+factura.getUuid());
 //			msg.setText("Prueba de correo 2");
@@ -214,7 +214,7 @@ public class EmailSender {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}catch(OverQuotaException e){
-			System.out.println("Se alcanzó");
+			System.out.println("Se alcanzï¿½");
 		}
 	}
 }

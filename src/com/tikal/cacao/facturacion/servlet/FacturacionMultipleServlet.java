@@ -130,7 +130,7 @@ public class FacturacionMultipleServlet extends HttpServlet {
 		List<Datos> lista = datosdao.todos();
 		for (Datos fr : lista) {
 			String respuesta = this.timbrarDatos(fr, request.getSession());
-			if (respuesta.compareTo("¡La factura se timbró con éxito!") == 0) {
+			if (respuesta.compareTo("ï¿½La factura se timbrï¿½ con ï¿½xito!") == 0) {
 				datosdao.elimiar(fr);
 			} else {
 				
@@ -225,7 +225,7 @@ public class FacturacionMultipleServlet extends HttpServlet {
 			com.tikal.cacao.model.Concepto conce = mapa.get(d.getClave());
 
 			if(conce==null){
-				return "No se encontró el concepto: "+d.getClave();
+				return "No se encontrï¿½ el concepto: "+d.getClave();
 			}
 			
 			if(f.getRFC().compareTo("MME080729180")==0){
@@ -247,7 +247,7 @@ public class FacturacionMultipleServlet extends HttpServlet {
 					d.setUnidadAduana(conce.getUnidadAduana());
 				}
 			} else if (f.getRFC().compareTo("XEXX010101000") == 0) {
-				return "No se encontró la unidad de aduana en el concepto " + con.getNoIdentificacion();
+				return "No se encontrï¿½ la unidad de aduana en el concepto " + con.getNoIdentificacion();
 			}
 			
 
@@ -354,7 +354,7 @@ public class FacturacionMultipleServlet extends HttpServlet {
 		this.addAddenda(c, f);
 
 		//Timbrado del comprobante
-		String respuesta = servicioFact.timbrar(vo, sesion, true, extra);
+		String respuesta = servicioFact.timbrar(vo, sesion, true, extra, vo.getNoOrden());
 		RegistroBitacora bit = new RegistroBitacora();
 		bit.setEvento(f.getSerie()+f.getFolio()+ " "+respuesta);
 		bit.setTipo("Operacional");
@@ -377,11 +377,11 @@ public class FacturacionMultipleServlet extends HttpServlet {
 			return "01";
 		case "CHEQUE NOMINATIVO":
 			return "02";
-		case "TRANSFERENCIA ELECTRÓNICA DE FONDOS":
+		case "TRANSFERENCIA ELECTRï¿½NICA DE FONDOS":
 			return "03";
-		case "TARJETA DE CRÉDITO":
+		case "TARJETA DE CRï¿½DITO":
 			return "04";
-		case "TARJETA DE DÉBITO":
+		case "TARJETA DE Dï¿½BITO":
 			return "28";
 		case "POR DEFINIR":
 			return "99";

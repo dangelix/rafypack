@@ -12,13 +12,13 @@ public class PagosFacturaVTT extends FacturaVTT {
 
 	public PagosFacturaVTT(String uuid, String cfdi, String rfcEmisor, String nombreReceptor, Date fecha, String sello,
 			byte[] codigoQR) {
-		super(uuid, cfdi, rfcEmisor, nombreReceptor, fecha, sello, codigoQR);
+		super(uuid, cfdi, rfcEmisor, nombreReceptor, fecha, sello, codigoQR, null);
 		
 	}
 	
 	public PagosFacturaVTT(String uuid, String cfdi, String rfcEmisor, String nombreReceptor, Date fecha, String sello,
 			byte[] codigoQR, String uuidRelacionado, String fechaPago, String formaDePago, String moneda, String monto) {
-		super(uuid, cfdi, rfcEmisor, nombreReceptor, fecha, sello, codigoQR);
+		super(uuid, cfdi, rfcEmisor, nombreReceptor, fecha, sello, codigoQR, null);
 		this.setUuidCFDIRelacionado(uuidRelacionado);
 		this.setFechaPago(fechaPago);
 		this.setFormaDePago(formaDePago);
