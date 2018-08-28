@@ -57,6 +57,7 @@ import com.tikal.cacao.sat.cfd33.Comprobante.Conceptos.Concepto;
 import com.tikal.cacao.sat.cfd33.Comprobante.Conceptos.Concepto.Impuestos.Traslados.Traslado;
 import com.tikal.cacao.sat.cfd33.Comprobante.Impuestos;
 import com.tikal.cacao.service.FacturaVTTService;
+import com.tikal.cacao.springController.viewObjects.Comprobante33VO;
 import com.tikal.cacao.springController.viewObjects.v33.ComprobanteConComentarioVO;
 import com.tikal.cacao.springController.viewObjects.v33.ComprobanteVO;
 import com.tikal.cacao.util.EmailSender;
@@ -186,6 +187,26 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		factura.setComentarios(comprobanteConComentario.getComentario());
 
 		facturaVTTDAO.guardar(factura);
+		this.crearReporteRenglon(factura, c.getMetodoPago(), c.getTipoDeComprobante().getValor());
+  
+		String evento = "Se actualiz� la prefactura con id: " + factura.getUuid();
+		RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
+		bitacoradao.addReg(registroBitacora);
+
+		return "�La factura se actualiz� con �xito!";
+	}
+	
+	@Override
+	public String actualizar33(Comprobante33VO comprobanteNew, String uuid, HttpSession sesion) {
+		Comprobante c = comprobanteNew.getComprobante();
+		String xmlComprobante = Util.marshallComprobante33(c, false);
+		System.out.println("la orden lleva:"+comprobanteNew.getNoOrden());
+		FacturaVTT factura = new FacturaVTT(uuid, xmlComprobante, c.getEmisor().getRfc(), c.getReceptor().getNombre(),
+				Util.xmlGregorianAFecha(c.getFecha()), null, null, comprobanteNew.getNoOrden());
+		factura.setComentarios(null);
+
+		facturaVTTDAO.guardar(factura);
+		//facturaVTTDAO.actualizar(factura);
 		this.crearReporteRenglon(factura, c.getMetodoPago(), c.getTipoDeComprobante().getValor());
   
 		String evento = "Se actualiz� la prefactura con id: " + factura.getUuid();

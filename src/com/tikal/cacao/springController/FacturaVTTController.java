@@ -92,7 +92,7 @@ public class FacturaVTTController {
 		System.out.println("Yisus manda:"+json);
 		try {
 			AsignadorDeCharset.asignar(req, res);
-			
+			PrintWriter writer = res.getWriter();
 			if (ServicioSesion.verificarPermiso(req, usuarioDAO, perfilDAO, 11)) {
 				ComprobanteConComentarioVO comprobanteConComentario = 
 						(ComprobanteConComentarioVO) JsonConvertidor.fromJson(json, ComprobanteConComentarioVO.class);
@@ -138,14 +138,18 @@ public class FacturaVTTController {
 		try {
 			AsignadorDeCharset.asignar(req, res);
 			if (ServicioSesion.verificarPermiso(req, usuarioDAO, perfilDAO, 11)) {
+				System.out.println("consultando el UUID:"+uuid);
 				FacturaVTT prefactura = facturaVTTService.consultar(uuid);
+				System.out.println("no de orden en factura vtt consultada:"+prefactura.getNoOrden());
 				ComprobanteConComentarioVO compComentariosVO = new ComprobanteConComentarioVO();
 				Comprobante c = Util.unmarshallCFDI33XML(prefactura.getCfdiXML());
 				c.setFecha(null);
-				
+				compComentariosVO.setNoOrden(prefactura.getNoOrden());
 				compComentariosVO.setComentario(prefactura.getComentarios());
 				compComentariosVO.setComprobante(c);
+				System.out.println("datos de vtt consultada:"+JsonConvertidor.toJsonComprobantes(compComentariosVO));
 				res.getWriter().println(JsonConvertidor.toJsonComprobantes(compComentariosVO));
+				
 			} else {
 				res.sendError(403);
 			}

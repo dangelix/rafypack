@@ -285,7 +285,7 @@ public class PDFFacturaV33 {
 			}
 			this.construirTablaDocumentosRelacionados(comprobante, pago);
 		}
-		//this.construirTablaPagare(comprobante);
+		this.construirTablaPagare(comprobante);
 	}
 
 	
@@ -335,7 +335,7 @@ public class PDFFacturaV33 {
 			}
 			this.construirTablaDocumentosRelacionados(comprobante, pago);
 		}
-		this.construirTablaPagare(comprobante);
+		//this.construirTablaPagare(comprobante);
 	}
 
 	
@@ -1346,17 +1346,17 @@ public class PDFFacturaV33 {
           c7.setHorizontalAlignment(Element.ALIGN_LEFT);
           c7.setColspan(2);
           tablaPagare.addCell(c7);
-		tablaPagare.setSpacingAfter(5);
+		tablaPagare.setSpacingAfter(10);
 		
-		Paragraph p8 = new Paragraph("RECIBE:\n",fontLeyendaFiscal);
+		Paragraph p8 = new Paragraph("\n\n\nRECIBE\n",fontLeyendaFiscal);
         PdfPCell c8 = new PdfPCell(p8);
-        c8.setHorizontalAlignment(Element.ALIGN_LEFT);
+        c8.setHorizontalAlignment(Element.ALIGN_CENTER);
         c8.setColspan(1);
         tablaPagare.addCell(c8);
         
-        Paragraph p9 = new Paragraph("FIRMA DE CONFORMIDAD:\n",fontLeyendaFiscal);
+        Paragraph p9 = new Paragraph("\n\n\nFIRMA DE CONFORMIDAD\n",fontLeyendaFiscal);
         PdfPCell c9 = new PdfPCell(p9);
-        c9.setHorizontalAlignment(Element.ALIGN_LEFT);
+        c9.setHorizontalAlignment(Element.ALIGN_CENTER);
         c9.setColspan(1);
         tablaPagare.addCell(c9);
 		
