@@ -163,17 +163,23 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		Comprobante c = comprobanteConComentario.getComprobante();
 		String xmlComprobante = Util.marshallComprobante33(c, false);
 		//comprobanteConComentario.getNoOrden()
+		System.out.println("AQUI ENTRA.......");
 		FacturaVTT factura = new FacturaVTT(Util.randomString(10), xmlComprobante, c.getEmisor().getRfc(),
 				c.getReceptor().getNombre(), Util.xmlGregorianAFecha(c.getFecha()), null, null, comprobanteConComentario.getNoOrden());
 		factura.setComentarios(comprobanteConComentario.getComentario());
 
 		facturaVTTDAO.guardar(factura);
 		this.crearReporteRenglon(factura, c.getMetodoPago(), c.getTipoDeComprobante().getValor());
-
+		
 		String evento = "Se guard� la prefactura con id: " + factura.getUuid();
 		RegistroBitacora registroBitacora = Util.crearRegistroBitacora(sesion, "Operacional", evento);
 		bitacoradao.addReg(registroBitacora);
-
+		if (factura.getEstatus().equals(Estatus.TIMBRADO)){} 
+			
+		else if (factura.getEstatus().equals(Estatus.GENERADO)) {
+			
+		}
+		this.incrementarFolio(factura.getRfcEmisor(), c.getSerie());
 		return "�La factura se gener� con �xito!";
 	}
 
@@ -221,7 +227,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 		FacturaVTT factura = facturaVTTDAO.consultar(uuid);
 		Comprobante comprobante = Util.unmarshallCFDI33XML(factura.getCfdiXML());
 		RespuestaWebServicePersonalizada respWBPersonalizada = this.timbrar(comprobante, factura.getComentarios(),
-				email, false, null, factura.getNoOrden());
+				email, true, null, factura.getNoOrden());
 
 		if (respWBPersonalizada.getUuidFactura() != null) {
 			// SE TIMBR� LA FACTURA CON �XITO
@@ -542,7 +548,7 @@ public class FacturaVTTServiceImpl implements FacturaVTTService {
 			if (codigoRespuesta == 0) {
 				String xmlCFDITimbrado = (String) respuestaWB.get(3);
 				Comprobante cfdiTimbrado = Util.unmarshallCFDI33XML(xmlCFDITimbrado);
-				this.incrementarFolio(cfdiTimbrado.getEmisor().getRfc(), cfdiTimbrado.getSerie());
+				//this.incrementarFolio(cfdiTimbrado.getEmisor().getRfc(), cfdiTimbrado.getSerie());
 				byte[] bytesQRCode = (byte[]) respuestaWB.get(4);
 				String selloDigital = (String) respuestaWB.get(5);
 

@@ -1,11 +1,10 @@
-<!-- Indices written at Wed, 25 Jul 2018 13:25:22 CDT -->
+<?xml version="1.0" encoding="utf-8"?>
 
 <datastore-indexes autoGenerate="true">
 
-    <!-- Used 1 time in query history -->
     <datastore-index kind="ReporteRenglon" ancestor="false" source="auto">
         <property name="rfcEmisor" direction="asc"/>
         <property name="fechaCertificacion" direction="desc"/>
-    </datastore-index>
+    </datastore-index> 
 
 </datastore-indexes>

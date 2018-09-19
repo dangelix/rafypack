@@ -104,6 +104,7 @@ public class EntityRegister {
 		registrar(Datos.class);
 		registrar(DomicilioCE.class);
 		registrar(PagosFacturaVTT.class);
+		//registrar();
 	}
 	
 	private <T> void registrar(Class<T> clase) {

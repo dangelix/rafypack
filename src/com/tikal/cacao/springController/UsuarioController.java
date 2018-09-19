@@ -163,7 +163,7 @@ public class UsuarioController {
 		
 		
 		
-		@RequestMapping(value = { "/TodoPoderoso" }, method = RequestMethod.GET)
+		@RequestMapping(value = { "/Admin" }, method = RequestMethod.GET)
 		public void crearUsuarioUnico(HttpServletRequest request, HttpServletResponse response){
 			
 				Usuario usuario = new Usuario();
