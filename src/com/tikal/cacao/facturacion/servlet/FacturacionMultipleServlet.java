@@ -131,7 +131,7 @@ public class FacturacionMultipleServlet extends HttpServlet {
 		for (Datos fr : lista) {
 			String respuesta = this.timbrarDatos(fr, request.getSession());
 			if (respuesta.compareTo("�La factura se timbr� con �xito!") == 0) {
-				datosdao.elimiar(fr);
+				datosdao.eliminar(fr);
 			} else {
 				
 					fr.setPausada(true);

@@ -178,7 +178,7 @@ public class FacturaController {
 	public void eliminarFR(HttpServletRequest req, HttpServletResponse res, @RequestBody String json) throws IOException {
 		AsignadorDeCharset.asignar(req, res);
 		Datos fr= (Datos) JsonConvertidor.fromJson(json, Datos.class);
-		datosdao.elimiar(fr);
+		datosdao.eliminar(fr);
 	}
 	
 	@RequestMapping(value = "/activar", method = RequestMethod.POST, produces="application/json")

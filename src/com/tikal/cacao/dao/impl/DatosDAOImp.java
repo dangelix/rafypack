@@ -31,12 +31,12 @@ public class DatosDAOImp implements DatosDAO{
 	}
 
 	@Override
-	public void elimiar(Datos d) {
+	public void eliminar(Datos d) {
 		ofy().delete().entity(d).now();
 	}
 
 	@Override
-	public void elimiar(List<Datos> lista) {
+	public void eliminar(List<Datos> lista) {
 		ofy().delete().entities(lista);
 	}
 

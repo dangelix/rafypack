@@ -14,9 +14,9 @@ public interface DatosDAO {
 	
 	public List<Datos> todos();
 	
-	public void elimiar(Datos d);
+	public void eliminar(Datos d);
 	
-	public void elimiar(List<Datos> lista);
+	public void eliminar(List<Datos> lista);
 	
 	public int indice();
 }
