@@ -231,6 +231,10 @@ app.config([ '$routeProvider', function($routeProvider) {
 		templateUrl : "facturacion/pages/multiple.html",
 		controller : "archivoController"
 	});
+	$routeProvider.when('/validxml', {
+		templateUrl : "facturacion/pages/validar.html",
+		controller : "validarController"
+	});
 	
 	$routeProvider.when('/reporte/', {
 		templateUrl : "pages/reporte.html",

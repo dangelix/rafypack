@@ -1,0 +1,57 @@
+<section class="jumbotron">
+	<div class="container">
+		<h2>Validaci&oacute;n de XML</h2>
+		<p>{{nombreEmpresa}}</p>
+		<submenu />
+	</div>
+</section>
+<div class="container">
+	<div class="row">
+		<input id="b_pics" type="file" class="file" multiple="true"
+			multiple-File-Model="b_pics" accept="application/xml" required /><br>
+
+		<button type="button" class="btn data-dismiss="
+			modal"
+			ng-click="ok(); porProcesar=true">Validar</button>
+		<hr>
+		<label id="cadena" ng-show="false"></label>
+	</div>
+
+	<div class="row" ng-show="porProcesar">
+		<h4>Factura</h4>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Cantidad</th>
+					<th>Descripci&oacute;n</th>
+					<th>Valor Unitario</th>
+					<th>Importe</th>
+					<th>Validado por Rafypack</th>
+					<th>Validado por SAT</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>15</td>
+					<td>3.4 MM STR SERRATED IRRIGATING DISSECTOR BLD</td>
+					<td>{{11198.84 | currency}}</td>
+					<td>{{167982.60 | currency}}</td>
+					<td><i class="glyphicon glyphicon-ok"></i></td>
+					<td><i class="glyphicon glyphicon-ok"></i></td>
+					
+				</tr>
+				
+				<tr>
+					<td>50</td>
+					<td>DIEGO TUBE SET (6/PK)</td>
+					<td>{{3671.11 | currency}}</td>
+					<td>{{183555.50 | currency}}</td>
+					<td><i class="glyphicon glyphicon-ok"></i></td>
+					<td><i class="glyphicon glyphicon-ok"></i></td>
+					
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+</div>
